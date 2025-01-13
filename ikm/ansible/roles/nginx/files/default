@@ -1,0 +1,19 @@
+server {
+    listen 443 ssl;
+    server_name www.ikm.internal;
+
+    ssl_certificate     /etc/nginx/ssl/server.crt;
+    ssl_certificate_key /etc/nginx/ssl/server.key;
+
+    root /var/www/html;
+    index index.html;
+
+    location / {
+        if ($host != "www.ikm.internal") {
+            return 403;
+        }
+
+        root /var/www/html;
+        index index.html;
+    }
+}
