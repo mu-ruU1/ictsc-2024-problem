@@ -12,6 +12,7 @@ logging.basicConfig(
 
 options = webdriver.FirefoxOptions()
 options.add_argument("-headless")
+# https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#13450
 options.set_preference("network.dns.native_https_query", True)
 service = webdriver.FirefoxService(executable_path="/snap/bin/geckodriver")
 
