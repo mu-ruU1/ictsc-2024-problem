@@ -1,0 +1,79 @@
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - curl
+      - gnupg2
+      - ca-certificates
+      - lsb-release
+      - ubuntu-keyring
+    update_cache: true
+    upgrade: true
+
+- name: Download nginx signing key
+  ansible.builtin.get_url:
+    url: https://nginx.org/keys/nginx_signing.key
+    dest: /tmp/nginx_signing.key
+    mode: "0644"
+
+- name: Convert nginx signing key to gpg
+  ansible.builtin.shell: |
+    set -eo pipefail
+    gpg --dearmor /tmp/nginx_signing.key | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+  args:
+    creates: /usr/share/keyrings/nginx-archive-keyring.gpg
+
+- name: Setup the nginx repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu {{ ansible_distribution_release }} nginx"
+    filename: nginx
+    state: present
+    update_cache: true
+
+- name: Install nginx
+  ansible.builtin.apt:
+    name:
+      - nginx
+
+- name: Copy nginx file
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - { src: "nginx/default", dest: "/etc/nginx/sites-available/default" }
+    - { src: "nginx/index.html", dest: "/var/www/html/index.html" }
+
+- name: Create ssl directory
+  ansible.builtin.file:
+    path: /etc/nginx/ssl
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Generate server private key
+  ansible.builtin.shell: |
+    openssl genrsa -out /etc/nginx/ssl/server.key 2048
+  args:
+    creates: /etc/nginx/ssl/server.key
+
+- name: Generate certificate signing request (CSR)
+  ansible.builtin.shell: |
+    openssl req -new -key /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.csr -subj "/C=JP/ST=Tokyo/L=Chofu/O=ICTSC/OU=ICTSC2024/CN=www.ikm.internal"
+  args:
+    creates: /etc/nginx/ssl/server.csr
+
+- name: Generate self-signed certificate
+  ansible.builtin.shell: |
+    openssl x509 -days 3650 -req -signkey /etc/nginx/ssl/server.key -in /etc/nginx/ssl/server.csr -out /etc/nginx/ssl/server.crt
+  args:
+    creates: /etc/nginx/ssl/server.crt
+
+- name: Start nginx
+  ansible.builtin.systemd_service:
+    name: nginx
+    state: restarted
+    enabled: true
+    daemon_reload: true
