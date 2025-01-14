@@ -14,6 +14,6 @@ $TTL 345600
 ns1	IN	A	192.168.20.53
 
 www	IN	HTTPS	10	. (
-		ipv4hint=192.168.20.54
+		ipv4hint=192.168.32.180
 		alpn=h2
 		)
