@@ -1,0 +1,19 @@
+$ORIGIN ikm.internal.
+$TTL 345600
+
+@	IN	SOA	ns1.ikm.internal. admin.ikm.internal. (
+		2025031623
+		28800
+		7200
+		864000
+		345600
+		)
+
+	IN	NS	ns1.ikm.internal.
+
+ns1	IN	A	192.168.20.53
+
+www	IN	HTTPS	10	. (
+		ipv4hint=192.168.20.54
+		alpn=h2
+		)

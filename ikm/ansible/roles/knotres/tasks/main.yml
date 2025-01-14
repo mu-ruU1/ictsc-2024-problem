@@ -1,0 +1,26 @@
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - wget
+    update_cache: true
+    upgrade: true
+
+- name: Add CZ.NIC Labs Packaging GPG key
+  ansible.builtin.get_url:
+    url: https://pkg.labs.nic.cz/gpg
+    dest: /usr/share/keyrings/cznic-labs-pkg.gpg
+    mode: "0644"
+
+- name: Setup the knot-resolver repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/cznic-labs-pkg.gpg] https://pkg.labs.nic.cz/knot-resolver {{ ansible_distribution_release }} main"
+    filename: cznic-labs-knot-resolver
+    state: present
+    update_cache: true
+
+- name: Install Knot Resolver
+  ansible.builtin.apt:
+    name:
+      - knot-resolver
