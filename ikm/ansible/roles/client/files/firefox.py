@@ -19,7 +19,8 @@ service = webdriver.FirefoxService(executable_path="/snap/bin/geckodriver")
 try:
     driver = webdriver.Firefox(options=options, service=service)
     driver.get(url)
-    logging.info(f"successfully accessed {url}")
+    title = driver.title
+    logging.info(f"successfully accessed {title}")
 except Exception as e:
     logging.error(f"failed to access {url}: {e}")
 finally:
