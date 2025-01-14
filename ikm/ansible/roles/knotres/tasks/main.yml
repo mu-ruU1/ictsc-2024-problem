@@ -24,3 +24,41 @@
   ansible.builtin.apt:
     name:
       - knot-resolver
+
+- name: Copy kresd.conf
+  ansible.builtin.copy:
+    src: knot-resolver/kresd.conf
+    dest: /etc/knot-resolver/kresd.conf
+    owner: root
+    group: knot
+    mode: "0640"
+
+- name: Start Knot Resolver
+  ansible.builtin.systemd_service:
+    name: kresd@1
+    state: restarted
+    enabled: true
+    daemon_reload: true
+
+- name: Copy dns UFW rules
+  ansible.builtin.copy:
+    src: ufw/dns
+    dest: /etc/ufw/applications.d/dns
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Allow SSH UFW
+  community.general.ufw:
+    rule: allow
+    app: OpenSSH
+
+- name: Allow DNS UFW
+  community.general.ufw:
+    rule: allow
+    app: DNS
+
+- name: Enable UFW
+  community.general.ufw:
+    default: deny
+    state: enabled

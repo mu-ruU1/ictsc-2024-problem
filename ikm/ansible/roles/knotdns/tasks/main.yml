@@ -24,3 +24,44 @@
   ansible.builtin.apt:
     name:
       - knot
+
+- name: Copy configuration and zone files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: knot
+    mode: "0640"
+  loop:
+    - { src: "knot/knot.conf", dest: "/etc/knot/knot.conf" }
+    - { src: "knot/internal.ikm.zone", dest: "/var/lib/knot/internal.ikm.zone" }
+
+- name: Start Knot DNS
+  ansible.builtin.systemd_service:
+    name: knot
+    state: restarted
+    enabled: true
+    daemon_reload: true
+
+- name: Copy dns UFW rules
+  ansible.builtin.copy:
+    src: ufw/dns
+    dest: /etc/ufw/applications.d/dns
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Allow SSH UFW
+  community.general.ufw:
+    rule: allow
+    app: OpenSSH
+
+- name: Allow DNS UFW
+  community.general.ufw:
+    rule: allow
+    app: DNS
+
+- name: Enable UFW
+  community.general.ufw:
+    default: deny
+    state: enabled

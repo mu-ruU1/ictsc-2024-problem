@@ -1,0 +1,4 @@
+[DNS]
+title=ICTSC 2024 Final Knot Resolver
+description=The Knot Resolver is a caching DNS resolver scalable from huge resolver farms down to home network routers
+ports=53/udp|53/tcp

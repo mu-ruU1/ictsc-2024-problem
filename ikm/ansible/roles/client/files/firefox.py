@@ -16,8 +16,6 @@ options.add_argument("-headless")
 options.set_preference("network.dns.native_https_query", True)
 service = webdriver.FirefoxService(executable_path="/snap/bin/geckodriver")
 
-driver = None
-
 try:
     driver = webdriver.Firefox(options=options, service=service)
     driver.get(url)
