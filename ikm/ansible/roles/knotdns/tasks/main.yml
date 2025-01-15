@@ -26,15 +26,17 @@
       - knot
 
 - name: Copy configuration and zone files
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: root
     group: knot
     mode: "0640"
   loop:
-    - { src: "knot/knot.conf", dest: "/etc/knot/knot.conf" }
-    - { src: "knot/internal.ikm.zone", dest: "/var/lib/knot/internal.ikm.zone" }
+    - src: "knot/knot.conf.j2"
+      dest: "/etc/knot/knot.conf"
+    - src: "knot/internal.ikm.zone.j2"
+      dest: "/var/lib/knot/internal.ikm.zone"
 
 - name: Start Knot DNS
   ansible.builtin.systemd_service:

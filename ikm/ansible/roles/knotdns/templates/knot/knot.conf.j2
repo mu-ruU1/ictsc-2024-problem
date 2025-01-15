@@ -2,7 +2,7 @@ server:
   rundir: /run/knot
   user: knot:knot
   automatic-acl: on
-  listen: 192.168.32.53@53
+  listen: {{ hostvars['knotdns']['ansible_host'] }}@53
 
 log:
   - target: syslog
