@@ -1,4 +1,4 @@
-net.listen('192.168.32.153', 53, { kind = 'dns' })
+net.listen('{{ hostvars['knotres']['ansible_host'] }}', 53, { kind = 'dns' })
 
 modules = {
         'hints > iterate',
@@ -15,4 +15,4 @@ internalDomains = policy.todnames({'ikm.internal'})
 
 policy.add(policy.suffix(policy.FLAGS({'CACHED'}), internalDomains))
 policy.add(policy.suffix(policy.FLAGS({'NO_EDNS'}), internalDomains))
-policy.add(policy.suffix(policy.STUB({'192.168.32.53@53'}), internalDomains))
+policy.add(policy.suffix(policy.STUB({'{{ hostvars['knotdns']['ansible_host'] }}@53'}), internalDomains))
