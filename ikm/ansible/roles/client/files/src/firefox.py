@@ -1,9 +1,10 @@
 from selenium import webdriver
 import logging
+import os
 import time
 
 url = "https://www.ikm.internal/"
-logfile = "firefox.log"
+logfile = os.path.join(os.path.dirname(__file__), "firefox.log")
 webdriver_path = "/snap/bin/geckodriver"
 
 logging.basicConfig(
