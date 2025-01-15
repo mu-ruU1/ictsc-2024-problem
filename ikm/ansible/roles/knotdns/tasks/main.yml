@@ -5,6 +5,9 @@
       - ca-certificates
       - wget
     update_cache: true
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
     upgrade: true
 
 - name: Add CZ.NIC Labs Packaging GPG key

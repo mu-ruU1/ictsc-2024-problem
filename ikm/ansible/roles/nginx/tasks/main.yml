@@ -7,6 +7,9 @@
       - lsb-release
       - ubuntu-keyring
     update_cache: true
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
     upgrade: true
 
 - name: Download nginx signing key
