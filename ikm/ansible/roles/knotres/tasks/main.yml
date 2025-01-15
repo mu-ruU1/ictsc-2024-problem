@@ -12,6 +12,7 @@
     url: https://pkg.labs.nic.cz/gpg
     dest: /usr/share/keyrings/cznic-labs-pkg.gpg
     mode: "0644"
+  notify: Start Knot Resolver
 
 - name: Setup the knot-resolver repository
   ansible.builtin.apt_repository:
@@ -19,11 +20,13 @@
     filename: cznic-labs-knot-resolver
     state: present
     update_cache: true
+  notify: Start Knot Resolver
 
 - name: Install Knot Resolver
   ansible.builtin.apt:
     name:
       - knot-resolver
+  notify: Start Knot Resolver
 
 - name: Copy kresd.conf
   ansible.builtin.template:
@@ -32,13 +35,7 @@
     owner: root
     group: knot
     mode: "0640"
-
-- name: Start Knot Resolver
-  ansible.builtin.systemd_service:
-    name: kresd@1
-    state: restarted
-    enabled: true
-    daemon_reload: true
+  notify: Start Knot Resolver
 
 - name: Copy dns UFW rules
   ansible.builtin.copy:

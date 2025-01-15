@@ -1,0 +1,6 @@
+- name: Start Knot DNS
+  ansible.builtin.systemd_service:
+    name: knot
+    state: restarted
+    enabled: true
+    daemon_reload: true
