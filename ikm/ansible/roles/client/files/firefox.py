@@ -1,10 +1,13 @@
 from selenium import webdriver
 import logging
+import time
 
 url = "https://www.ikm.internal/"
+logfile = "firefox.log"
+webdriver_path = "/snap/bin/geckodriver"
 
 logging.basicConfig(
-    filename="firefox.log",
+    filename=logfile,
     level=logging.INFO,
     format="%(asctime)s %(levelname)s:%(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
@@ -14,15 +17,22 @@ options = webdriver.FirefoxOptions()
 options.add_argument("-headless")
 # https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#13450
 options.set_preference("network.dns.native_https_query", True)
-service = webdriver.FirefoxService(executable_path="/snap/bin/geckodriver")
+service = webdriver.FirefoxService(executable_path=webdriver_path)
 
 try:
     driver = webdriver.Firefox(options=options, service=service)
+
+    start_time = time.time()
     driver.get(url)
+    end_time = time.time()
+
+    response_time = end_time - start_time
+
     title = driver.title
-    logging.info(f"successfully accessed {title}")
+
+    logging.info(f"Accessed {title} - {url} in {response_time:.2f}s")
 except Exception as e:
-    logging.error(f"failed to access {url}: {e}")
+    logging.error(f"Failed to access {url}: {e}")
 finally:
     if driver:
         driver.quit()
