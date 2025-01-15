@@ -27,3 +27,12 @@
     user: "{{ prob_user }}"
     minute: "*"
     job: "/home/{{ prob_user }}/src/.venv/bin/python /home/{{ prob_user }}/src/firefox.py"
+
+- name: Generate netplan configuration
+  ansible.builtin.template:
+    src: netplan/90-config.yaml.j2
+    dest: /etc/netplan/90-config.yaml
+    owner: root
+    group: root
+    mode: "0600"
+  notify: Apply netplan
