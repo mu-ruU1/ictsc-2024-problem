@@ -1,0 +1,29 @@
+- name: Install firefox
+  community.general.snap:
+    name: firefox
+
+- name: Create src directory
+  ansible.builtin.file:
+    path: "/home/{{ prob_user }}/src"
+    state: directory
+    mode: "0755"
+
+- name: Copy firefox.py
+  ansible.builtin.copy:
+    src: src/firefox.py
+    dest: "/home/{{ prob_user }}/src/firefox.py"
+    owner: "{{ prob_user }}"
+    group: "{{ prob_user }}"
+    mode: "0750"
+
+- name: Install selenium (venv)
+  ansible.builtin.pip:
+    name: selenium
+    virtualenv: "/home/{{ prob_user }}/src/.venv"
+
+- name: Setup cron to run firefox.py every minute
+  ansible.builtin.cron:
+    name: run firefox.py
+    user: "{{ prob_user }}"
+    minute: "*"
+    job: "/home/{{ prob_user }}/src/.venv/bin/python /home/{{ prob_user }}/src/firefox.py"
