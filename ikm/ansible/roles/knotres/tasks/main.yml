@@ -36,7 +36,7 @@
     src: knot-resolver/kresd.conf.j2
     dest: /etc/knot-resolver/kresd.conf
     owner: root
-    group: knot
+    group: knot-resolver
     mode: "0640"
   notify: Start Knot Resolver
 

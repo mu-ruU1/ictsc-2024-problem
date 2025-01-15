@@ -2,10 +2,23 @@
   community.general.snap:
     name: firefox
 
+- name: Install python3-venv
+  ansible.builtin.apt:
+    name:
+      - python3-venv
+      - python3-pip
+    update_cache: true
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
+    upgrade: true
+
 - name: Create src directory
   ansible.builtin.file:
     path: "/home/{{ prob_user }}/src"
     state: directory
+    owner: "{{ prob_user }}"
+    group: "{{ prob_user }}"
     mode: "0755"
 
 - name: Copy firefox.py
@@ -17,9 +30,12 @@
     mode: "0750"
 
 - name: Install selenium (venv)
+  become: true
+  become_user: "{{ prob_user }}"
   ansible.builtin.pip:
     name: selenium
     virtualenv: "/home/{{ prob_user }}/src/.venv"
+    virtualenv_command: "{{ discovered_interpreter_python }} -m venv"
 
 - name: Setup cron to run firefox.py every minute
   ansible.builtin.cron:

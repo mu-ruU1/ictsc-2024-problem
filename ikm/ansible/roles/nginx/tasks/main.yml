@@ -21,10 +21,11 @@
 
 - name: Convert nginx signing key to gpg
   ansible.builtin.shell: |
-    set -eo pipefail
-    gpg --dearmor /tmp/nginx_signing.key | tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+    set -o pipefail
+    gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg /tmp/nginx_signing.key
   args:
     creates: /usr/share/keyrings/nginx-archive-keyring.gpg
+    executable: /bin/bash
   notify: Start nginx
 
 - name: Setup the nginx repository
@@ -43,8 +44,8 @@
 
 - name: Copy nginx configuration
   ansible.builtin.template:
-    src: nginx/default.j2
-    dest: /etc/nginx/sites-available/default
+    src: nginx/default.conf.j2
+    dest: /etc/nginx/conf.d/default.conf
     owner: root
     group: root
     mode: "0644"
@@ -59,7 +60,7 @@
     mode: "0644"
   loop:
     - src: nginx/index.html
-      dest: /var/www/html/index.html
+      dest: /usr/share/nginx/html/index.html
   notify: Start nginx
 
 - name: Create ssl directory

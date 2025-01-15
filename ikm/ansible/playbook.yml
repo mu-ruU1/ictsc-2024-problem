@@ -1,26 +1,26 @@
 - name: Setup KnotDNS
-  gather_facts: false
+  gather_facts: true
   become: true
   hosts: knotdns
   roles:
     - role: knotdns
 
 - name: Setup KnotRes
-  gather_facts: false
+  gather_facts: true
   become: true
   hosts: knotres
   roles:
     - role: knotres
 
 - name: Setup Nginx
-  gather_facts: false
+  gather_facts: true
   become: true
   hosts: nginx
   roles:
     - role: nginx
 
 - name: Setup Client
-  gather_facts: false
+  gather_facts: true
   become: true
   hosts: client
   roles:
