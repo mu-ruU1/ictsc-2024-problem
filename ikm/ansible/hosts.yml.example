@@ -13,3 +13,4 @@ all:
     ansible_password:
     ansible_become_password:
     ansible_ssh_private_key_file:
+    prob_user: user # 競技者ログインユーザ
