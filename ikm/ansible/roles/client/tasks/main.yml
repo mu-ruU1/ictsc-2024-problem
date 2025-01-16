@@ -21,13 +21,20 @@
     group: "{{ prob_user }}"
     mode: "0755"
 
+- name: Find geckodriver path
+  ansible.builtin.shell: |
+    which geckodriver
+  register: geckodriver_path
+  changed_when: false
+  failed_when: geckodriver_path.rc != 0
+
 - name: Copy firefox.py
-  ansible.builtin.copy:
-    src: src/firefox.py
+  ansible.builtin.template:
+    src: src/firefox.py.j2
     dest: "/home/{{ prob_user }}/src/firefox.py"
     owner: "{{ prob_user }}"
     group: "{{ prob_user }}"
-    mode: "0750"
+    mode: "0664"
 
 - name: Install selenium (venv)
   become: true

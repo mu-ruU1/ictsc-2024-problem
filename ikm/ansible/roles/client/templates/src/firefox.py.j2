@@ -5,7 +5,7 @@ import time
 
 url = "https://www.ikm.internal/"
 logfile = os.path.join(os.path.dirname(__file__), "firefox.log")
-webdriver_path = "/snap/bin/geckodriver"
+webdriver_path = "{{ geckodriver_path.stdout }}"
 
 logging.basicConfig(
     filename=logfile,
