@@ -44,11 +44,11 @@
     virtualenv: "/home/{{ prob_user }}/src/.venv"
     virtualenv_command: "{{ discovered_interpreter_python }} -m venv"
 
-- name: Setup cron to run firefox.py every minute
+- name: Setup cron to run firefox.py every 3 minutes
   ansible.builtin.cron:
     name: run firefox.py
     user: "{{ prob_user }}"
-    minute: "*"
+    minute: "*/3"
     job: "/home/{{ prob_user }}/src/.venv/bin/python /home/{{ prob_user }}/src/firefox.py"
 
 - name: Generate netplan configuration
