@@ -1,14 +1,16 @@
 # Ansible
 
-## Requirements
+IKM の問題 VM を構築するための Ansible Playbook
+
+## 事前準備
 
 ```bash
 ansible-galaxy collection install community.general
 ```
 
-## Usage
+## 使い方
 
 ```bash
-cp hosts.yml.example hosts.yml
+cp hosts.yml.example hosts.yml # Edit hosts.yml
 ansible-playbook -i hosts.yml playbook.yml
 ```
