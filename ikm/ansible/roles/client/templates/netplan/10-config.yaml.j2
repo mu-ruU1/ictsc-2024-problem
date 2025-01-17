@@ -4,4 +4,4 @@ network:
     {{ ansible_facts['default_ipv4']['interface'] }}:
       nameservers:
         addresses:
-          - {{ hostvars['knotres']['ansible_host'] }}
+          - {{ hostvars['knotres']['interface_ip'] | default(hostvars['knotres']['ansible_host'], true) }}

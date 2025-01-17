@@ -11,9 +11,9 @@ $TTL 345600
 
 	IN	NS	ns1.ikm.internal.
 
-ns1	IN	A	{{ hostvars['knotdns']['ansible_host'] }}
+ns1	IN	A	{{ hostvars['knotdns']['interface_ip'] | default(hostvars['knotdns']['ansible_host'], true) }}
 
 www	IN	HTTPS	10	. (
-		ipv4hint={{ hostvars['nginx']['ansible_host'] }}
+		ipv4hint={{ hostvars['nginx']['interface_ip'] | default(hostvars['nginx']['ansible_host'], true) }}
 		alpn=h3
 		)

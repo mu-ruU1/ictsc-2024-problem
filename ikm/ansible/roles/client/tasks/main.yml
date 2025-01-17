@@ -20,10 +20,10 @@
 
 - name: Create src directory
   ansible.builtin.file:
-    path: "/home/{{ prob_user }}/src"
+    path: "/home/{{ prob_user | default(ansible_user, true) }}/src"
     state: directory
-    owner: "{{ prob_user }}"
-    group: "{{ prob_user }}"
+    owner: "{{ prob_user | default(ansible_user, true) }}"
+    group: "{{ prob_user | default(ansible_user, true) }}"
     mode: "0755"
 
 - name: Wait for firefox installation to complete
@@ -44,25 +44,25 @@
 - name: Copy firefox.py
   ansible.builtin.template:
     src: src/firefox.py.j2
-    dest: "/home/{{ prob_user }}/src/firefox.py"
-    owner: "{{ prob_user }}"
-    group: "{{ prob_user }}"
+    dest: "/home/{{ prob_user | default(ansible_user, true) }}/src/firefox.py"
+    owner: "{{ prob_user | default(ansible_user, true) }}"
+    group: "{{ prob_user | default(ansible_user, true) }}"
     mode: "0664"
 
 - name: Install selenium (venv)
   become: true
-  become_user: "{{ prob_user }}"
+  become_user: "{{ prob_user | default(ansible_user, true) }}"
   ansible.builtin.pip:
     name: selenium
-    virtualenv: "/home/{{ prob_user }}/src/.venv"
+    virtualenv: "/home/{{ prob_user | default(ansible_user, true) }}/src/.venv"
     virtualenv_command: "{{ discovered_interpreter_python }} -m venv"
 
 - name: Setup cron to run firefox.py every 3 minutes
   ansible.builtin.cron:
     name: run firefox.py
-    user: "{{ prob_user }}"
+    user: "{{ prob_user | default(ansible_user, true) }}"
     minute: "*/3"
-    job: "/home/{{ prob_user }}/src/.venv/bin/python /home/{{ prob_user }}/src/firefox.py"
+    job: "/home/{{ prob_user | default(ansible_user, true) }}/src/.venv/bin/python /home/{{ prob_user | default(ansible_user, true) }}/src/firefox.py"
 
 - name: Generate netplan configuration
   ansible.builtin.template:

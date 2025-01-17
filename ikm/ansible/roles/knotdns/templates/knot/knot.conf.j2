@@ -2,7 +2,7 @@ server:
   rundir: /run/knot
   user: knot:knot
   automatic-acl: on
-  listen: {{ hostvars['knotdns']['ansible_host'] }}@53
+  listen: {{ hostvars['knotdns']['interface_ip'] | default(hostvars['knotdns']['ansible_host'], true) }}@53
 
 log:
   - target: syslog

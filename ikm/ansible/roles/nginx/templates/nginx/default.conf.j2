@@ -1,6 +1,6 @@
 server {
     listen 443 ssl;
-    server_name www.ikm.internal {{ hostvars['nginx']['ansible_host'] }};
+    server_name www.ikm.internal {{ hostvars['nginx']['interface_ip'] | default(hostvars['nginx']['ansible_host'], true) }};
 
     ssl_certificate     /etc/nginx/ssl/server.crt;
     ssl_certificate_key /etc/nginx/ssl/server.key;
