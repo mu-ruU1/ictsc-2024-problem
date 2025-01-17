@@ -12,5 +12,5 @@ ansible-galaxy collection install community.general
 
 ```bash
 cp hosts.yml.example hosts.yml # Edit hosts.yml
-ansible-playbook -i hosts.yml playbook.yml
+ansible-playbook playbook.yml
 ```
