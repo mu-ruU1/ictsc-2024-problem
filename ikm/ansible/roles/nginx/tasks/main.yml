@@ -8,10 +8,6 @@
       - ubuntu-keyring
     update_cache: true
 
-- name: Upgrade all packages
-  ansible.builtin.apt:
-    upgrade: true
-
 - name: Download nginx signing key
   ansible.builtin.get_url:
     url: https://nginx.org/keys/nginx_signing.key
@@ -41,6 +37,12 @@
     name:
       - nginx
   notify: Start nginx
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
+    upgrade: true
+  async: 300
+  poll: 0
 
 - name: Copy nginx configuration
   ansible.builtin.template:

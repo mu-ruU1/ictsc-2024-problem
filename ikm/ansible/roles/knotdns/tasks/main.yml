@@ -9,6 +9,8 @@
 - name: Upgrade all packages
   ansible.builtin.apt:
     upgrade: true
+  async: 300
+  poll: 0
 
 - name: Add CZ.NIC Labs Packaging GPG key
   ansible.builtin.get_url:

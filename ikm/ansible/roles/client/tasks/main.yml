@@ -1,6 +1,9 @@
 - name: Install firefox
   community.general.snap:
     name: firefox
+  async: 300
+  poll: 0
+  register: install_firefox_job
 
 - name: Install python3-venv
   ansible.builtin.apt:
@@ -12,6 +15,8 @@
 - name: Upgrade all packages
   ansible.builtin.apt:
     upgrade: true
+  async: 300
+  poll: 0
 
 - name: Create src directory
   ansible.builtin.file:
@@ -20,6 +25,14 @@
     owner: "{{ prob_user }}"
     group: "{{ prob_user }}"
     mode: "0755"
+
+- name: Wait for firefox installation to complete
+  ansible.builtin.async_status:
+    jid: "{{ install_firefox_job.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 60
+  delay: 5
 
 - name: Find geckodriver path
   ansible.builtin.shell: |
