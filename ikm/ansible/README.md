@@ -6,11 +6,20 @@ IKM の問題 VM を構築するための Ansible Playbook
 
 ```bash
 ansible-galaxy collection install community.general
+cp hosts.yml.example hosts.yml
 ```
 
-## 使い方
+### hosts.yml の編集
+
+- interface_ip
+  - DNAT 環境下で管理対象ノードのアドレスと問題環境のアドレスが異なる場合に指定
+  - 変数 false, 空文字の場合: `ansible_host`
+- prob_user
+  - 競技者ログインユーザ
+  - 変数 false, 空文字の場合: `ansible_user`
+
+## 実行
 
 ```bash
-cp hosts.yml.example hosts.yml # Edit hosts.yml
 ansible-playbook playbook.yml
 ```
