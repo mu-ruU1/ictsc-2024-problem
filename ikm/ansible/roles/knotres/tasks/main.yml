@@ -6,12 +6,6 @@
       - wget
     update_cache: true
 
-- name: Upgrade all packages
-  ansible.builtin.apt:
-    upgrade: true
-  async: 300
-  poll: 0
-
 - name: Add CZ.NIC Labs Packaging GPG key
   ansible.builtin.get_url:
     url: https://pkg.labs.nic.cz/gpg
@@ -32,6 +26,12 @@
     name:
       - knot-resolver
   notify: Start Knot Resolver
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
+    upgrade: true
+  async: 300
+  poll: 0
 
 - name: Copy kresd.conf
   ansible.builtin.template:
