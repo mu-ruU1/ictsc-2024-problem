@@ -6,12 +6,6 @@
       - wget
     update_cache: true
 
-- name: Upgrade all packages
-  ansible.builtin.apt:
-    upgrade: true
-  async: 300
-  poll: 0
-
 - name: Add CZ.NIC Labs Packaging GPG key
   ansible.builtin.get_url:
     url: https://pkg.labs.nic.cz/gpg
@@ -32,6 +26,12 @@
     name:
       - knot
   notify: Start Knot DNS
+
+- name: Upgrade all packages
+  ansible.builtin.apt:
+    upgrade: true
+  async: 300
+  poll: 0
 
 - name: Copy configuration and zone files
   ansible.builtin.template:
