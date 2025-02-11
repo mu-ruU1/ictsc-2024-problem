@@ -11,7 +11,7 @@
     url: https://pkg.labs.nic.cz/gpg
     dest: /usr/share/keyrings/cznic-labs-pkg.gpg
     mode: "0644"
-  notify: Start Knot DNS
+  notify: Restart Knot DNS
 
 - name: Setup the knot-dns repository
   ansible.builtin.apt_repository:
@@ -19,13 +19,13 @@
     filename: cznic-labs-knot-dns
     state: present
     update_cache: true
-  notify: Start Knot DNS
+  notify: Restart Knot DNS
 
 - name: Install Knot DNS
   ansible.builtin.apt:
     name:
       - knot
-  notify: Start Knot DNS
+  notify: Restart Knot DNS
 
 - name: Upgrade all packages
   ansible.builtin.apt:
@@ -45,7 +45,7 @@
       dest: "/etc/knot/knot.conf"
     - src: "knot/internal.ikm.zone.j2"
       dest: "/var/lib/knot/internal.ikm.zone"
-  notify: Start Knot DNS
+  notify: Restart Knot DNS
 
 - name: Copy dns UFW rules
   ansible.builtin.copy:

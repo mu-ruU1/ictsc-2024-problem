@@ -1,4 +1,4 @@
-- name: Start Knot Resolver
+- name: Restart Knot Resolver
   ansible.builtin.systemd_service:
     name: kresd@1
     state: restarted

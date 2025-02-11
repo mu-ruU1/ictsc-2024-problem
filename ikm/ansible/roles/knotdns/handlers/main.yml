@@ -1,4 +1,4 @@
-- name: Start Knot DNS
+- name: Restart Knot DNS
   ansible.builtin.systemd_service:
     name: knot
     state: restarted

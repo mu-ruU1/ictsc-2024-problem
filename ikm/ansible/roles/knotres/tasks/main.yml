@@ -11,7 +11,7 @@
     url: https://pkg.labs.nic.cz/gpg
     dest: /usr/share/keyrings/cznic-labs-pkg.gpg
     mode: "0644"
-  notify: Start Knot Resolver
+  notify: Restart Knot Resolver
 
 - name: Setup the knot-resolver repository
   ansible.builtin.apt_repository:
@@ -19,13 +19,13 @@
     filename: cznic-labs-knot-resolver
     state: present
     update_cache: true
-  notify: Start Knot Resolver
+  notify: Restart Knot Resolver
 
 - name: Install Knot Resolver
   ansible.builtin.apt:
     name:
       - knot-resolver
-  notify: Start Knot Resolver
+  notify: Restart Knot Resolver
 
 - name: Upgrade all packages
   ansible.builtin.apt:
@@ -40,7 +40,7 @@
     owner: root
     group: knot-resolver
     mode: "0640"
-  notify: Start Knot Resolver
+  notify: Restart Knot Resolver
 
 - name: Copy dns UFW rules
   ansible.builtin.copy:

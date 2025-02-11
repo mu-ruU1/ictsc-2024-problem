@@ -13,7 +13,7 @@
     url: https://nginx.org/keys/nginx_signing.key
     dest: /tmp/nginx_signing.key
     mode: "0644"
-  notify: Start nginx
+  notify: Restart nginx
 
 - name: Convert nginx signing key to gpg
   ansible.builtin.shell: |
@@ -22,7 +22,7 @@
   args:
     creates: /usr/share/keyrings/nginx-archive-keyring.gpg
     executable: /bin/bash
-  notify: Start nginx
+  notify: Restart nginx
 
 - name: Setup the nginx repository
   ansible.builtin.apt_repository:
@@ -30,13 +30,13 @@
     filename: nginx
     state: present
     update_cache: true
-  notify: Start nginx
+  notify: Restart nginx
 
 - name: Install nginx
   ansible.builtin.apt:
     name:
       - nginx
-  notify: Start nginx
+  notify: Restart nginx
 
 - name: Upgrade all packages
   ansible.builtin.apt:
@@ -51,7 +51,7 @@
     owner: root
     group: root
     mode: "0644"
-  notify: Start nginx
+  notify: Restart nginx
 
 - name: Copy html file
   ansible.builtin.copy:
@@ -63,7 +63,7 @@
   loop:
     - src: nginx/index.html
       dest: /usr/share/nginx/html/index.html
-  notify: Start nginx
+  notify: Restart nginx
 
 - name: Create ssl directory
   ansible.builtin.file:
@@ -72,25 +72,33 @@
     owner: root
     group: root
     mode: "0755"
-  notify: Start nginx
+  notify: Restart nginx
 
 - name: Generate server private key
   ansible.builtin.shell: |
     openssl genrsa -out /etc/nginx/ssl/server.key 2048
   args:
     creates: /etc/nginx/ssl/server.key
-  notify: Start nginx
+  notify: Restart nginx
 
 - name: Generate certificate signing request (CSR)
   ansible.builtin.shell: |
     openssl req -new -key /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.csr -subj "/C=JP/ST=Tokyo/L=Chofu/O=ICTSC/OU=ICTSC2024/CN=www.ikm.internal"
   args:
     creates: /etc/nginx/ssl/server.csr
-  notify: Start nginx
+  notify: Restart nginx
 
 - name: Generate self-signed certificate
   ansible.builtin.shell: |
     openssl x509 -days 3650 -req -signkey /etc/nginx/ssl/server.key -in /etc/nginx/ssl/server.csr -out /etc/nginx/ssl/server.crt
   args:
     creates: /etc/nginx/ssl/server.crt
-  notify: Start nginx
+  notify: Restart nginx
+
+- name: SSH deny prob_user login
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "DenyUsers {{ prob_user }}"
+    state: present
+  notify: Restart ssh
+  when: prob_user and prob_user != ansible_user # None, ""を除外
