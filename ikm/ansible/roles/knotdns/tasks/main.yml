@@ -50,7 +50,7 @@
 - name: Copy dns UFW rules
   ansible.builtin.copy:
     src: ufw/dns
-    dest: /etc/ufw/applications.d/dns
+    dest: /etc/ufw/applications.d/
     owner: root
     group: root
     mode: "0644"

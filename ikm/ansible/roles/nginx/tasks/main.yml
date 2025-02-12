@@ -62,7 +62,7 @@
     mode: "0644"
   loop:
     - src: nginx/index.html
-      dest: /usr/share/nginx/html/index.html
+      dest: /usr/share/nginx/html/
   notify: Restart nginx
 
 - name: Create ssl directory

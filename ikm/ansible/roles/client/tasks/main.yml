@@ -64,6 +64,15 @@
     minute: "*/3"
     job: "/home/{{ prob_user | default(ansible_user, true) }}/src/.venv/bin/python /home/{{ prob_user | default(ansible_user, true) }}/src/firefox.py"
 
+- name: Disable systemd-resolved cache
+  ansible.builtin.copy:
+    src: resolved/custom.conf
+    dest: /etc/systemd/resolved.conf.d/
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart systemd-resolved
+
 - name: Generate netplan configuration
   ansible.builtin.template:
     src: netplan/10-config.yaml.j2
