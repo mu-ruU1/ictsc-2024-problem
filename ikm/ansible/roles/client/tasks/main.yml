@@ -13,6 +13,19 @@
 #   retries: 60
 #   delay: 5
 
+# ERROR:Failed to access https://www.ikm.internal/: Message: Service /snap/bin/geckodriver unexpectedly exited. Status code was: 1 の解決
+- name: Add DBUS_SESSION_BUS_ADDRESS to .bashrc
+  ansible.builtin.lineinfile:
+    path: /home/{{ prob_user | default(ansible_user, true) }}/.bashrc
+    line: export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+    mode: "0644"
+
+- name: Uninstall socat
+  ansible.builtin.apt:
+    name: socat
+    purge: true
+    state: absent
+
 - name: Install python3-venv
   ansible.builtin.apt:
     name:
