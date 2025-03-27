@@ -8,6 +8,20 @@
       - ubuntu-keyring
     update_cache: true
 
+- name: Setup cron to dig A every 1 minutes
+  ansible.builtin.cron:
+    name: dig A every 1 minutes
+    user: "{{ prob_user | default(ansible_user, true) }}"
+    minute: "*"
+    job: "/usr/bin/dig @{{ hostvars['knotres']['interface_ip'] | default(hostvars['knotres']['ansible_host'], true) }} www.ikm.internal A"
+
+- name: Setup cron to dig HTTPS every 1 minutes
+  ansible.builtin.cron:
+    name: dig HTTPS every 1 minutes
+    user: "{{ prob_user | default(ansible_user, true) }}"
+    minute: "*"
+    job: "/usr/bin/dig @{{ hostvars['knotres']['interface_ip'] | default(hostvars['knotres']['ansible_host'], true) }} www.ikm.internal HTTPS"
+
 - name: Download nginx signing key
   ansible.builtin.get_url:
     url: https://nginx.org/keys/nginx_signing.key

@@ -20,6 +20,14 @@
     line: export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
     mode: "0644"
 
+- name: Run firefox.py in background on login
+  ansible.builtin.lineinfile:
+    path: /home/{{ prob_user | default(ansible_user, true) }}/.bashrc
+    line: >
+      nohup /home/{{ prob_user | default(ansible_user, true) }}/src/.venv/bin/python
+      /home/{{ prob_user | default(ansible_user, true) }}/src/firefox.py > /dev/null 2>&1 & disown
+    mode: "0644"
+
 - name: Uninstall socat
   ansible.builtin.apt:
     name: socat
